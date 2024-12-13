@@ -325,12 +325,12 @@ managerSetProxy po = managerSetInsecureProxy po . managerSetSecureProxy po
 -- @since 0.7.17
 managerSetMaxHeaderLength :: Int -> ManagerSettings -> ManagerSettings
 managerSetMaxHeaderLength l manager = manager
-    { managerMaxHeaderLength = Just $ MaxHeaderLength l }
+    { managerMaxHeaderLength = MaxHeaderLength l }
 
 -- @since 0.7.18
 managerSetMaxNumberHeaders :: Int -> ManagerSettings -> ManagerSettings
 managerSetMaxNumberHeaders l manager = manager
-    { managerMaxNumberHeaders = Just $ MaxNumberHeaders l }
+    { managerMaxNumberHeaders = MaxNumberHeaders l }
 
 -- $example1
 -- = Example Usage

@@ -1,8 +1,9 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
 module Network.HTTP.Client.Types
     ( BodyReader
     , Connection (..)
@@ -39,7 +40,9 @@ module Network.HTTP.Client.Types
     , ResponseTimeout (..)
     , ProxySecureMode (..)
     , MaxHeaderLength (..)
+    , noMaxHeaderLength
     , MaxNumberHeaders (..)
+    , noMaxNumberHeaders
     ) where
 
 import qualified Data.Typeable as T (Typeable)
@@ -821,16 +824,16 @@ data ManagerSettings = ManagerSettings
     -- Default: respect the @proxy@ value on the @Request@ itself.
     --
     -- Since 0.4.7
-    , managerMaxHeaderLength :: Maybe MaxHeaderLength
+    , managerMaxHeaderLength :: MaxHeaderLength
     -- ^ Configure the maximum size, in bytes, of an HTTP header field.
-    -- Set it to 'Nothing' to remove this limit  (eg: for debugging purposes).
+    -- Set it to a negative number to remove this limit  (eg: for debugging purposes).
     --
     -- Default: 4096
     --
     -- @since 0.7.17
-    , managerMaxNumberHeaders :: Maybe MaxNumberHeaders
+    , managerMaxNumberHeaders :: MaxNumberHeaders
     -- ^ Configure the maximum number of HTTP header fields.
-    -- Set it to 'Nothing' to remove this limit (eg: for debugging purposes).
+    -- Set it to a negative number to remove this limit  (eg: for debugging purposes).
     --
     -- Default: 100
     --
@@ -861,8 +864,8 @@ data Manager = Manager
     , mSetProxy :: Request -> Request
     , mModifyResponse :: Response BodyReader -> IO (Response BodyReader)
     -- ^ See 'managerProxy'
-    , mMaxHeaderLength :: Maybe MaxHeaderLength
-    , mMaxNumberHeaders :: Maybe MaxNumberHeaders
+    , mMaxHeaderLength :: MaxHeaderLength
+    , mMaxNumberHeaders :: MaxNumberHeaders
     }
     deriving T.Typeable
 
@@ -921,7 +924,10 @@ data StreamFileStatus = StreamFileStatus
 newtype MaxHeaderLength = MaxHeaderLength
     { unMaxHeaderLength :: Int
     }
-    deriving (Eq, Show, Ord, T.Typeable)
+    deriving (Eq, Show, Ord, Num, T.Typeable)
+
+noMaxHeaderLength :: MaxHeaderLength
+noMaxHeaderLength = - 1
 
 -- | The maximum number of header fields.
 --
@@ -929,4 +935,7 @@ newtype MaxHeaderLength = MaxHeaderLength
 newtype MaxNumberHeaders = MaxNumberHeaders
     { unMaxNumberHeaders :: Int
     }
-    deriving (Eq, Show, Ord, T.Typeable)
+    deriving (Eq, Show, Ord, Num, T.Typeable)
+
+noMaxNumberHeaders :: MaxNumberHeaders
+noMaxNumberHeaders = - 1
