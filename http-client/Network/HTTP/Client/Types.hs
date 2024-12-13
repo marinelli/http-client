@@ -826,14 +826,14 @@ data ManagerSettings = ManagerSettings
     -- Since 0.4.7
     , managerMaxHeaderLength :: MaxHeaderLength
     -- ^ Configure the maximum size, in bytes, of an HTTP header field.
-    -- Set it to a negative number to remove this limit  (eg: for debugging purposes).
+    -- Set it to 0 to remove this limit  (eg: for debugging purposes).
     --
     -- Default: 4096
     --
     -- @since 0.7.17
     , managerMaxNumberHeaders :: MaxNumberHeaders
     -- ^ Configure the maximum number of HTTP header fields.
-    -- Set it to a negative number to remove this limit  (eg: for debugging purposes).
+    -- Set it to 0 to remove this limit  (eg: for debugging purposes).
     --
     -- Default: 100
     --
@@ -922,20 +922,20 @@ data StreamFileStatus = StreamFileStatus
 --
 -- @since 0.7.14
 newtype MaxHeaderLength = MaxHeaderLength
-    { unMaxHeaderLength :: Int
+    { unMaxHeaderLength :: Word
     }
     deriving (Eq, Show, Ord, Num, T.Typeable)
 
 noMaxHeaderLength :: MaxHeaderLength
-noMaxHeaderLength = - 1
+noMaxHeaderLength = 0
 
 -- | The maximum number of header fields.
 --
 -- @since 0.7.18
 newtype MaxNumberHeaders = MaxNumberHeaders
-    { unMaxNumberHeaders :: Int
+    { unMaxNumberHeaders :: Word
     }
     deriving (Eq, Show, Ord, Num, T.Typeable)
 
 noMaxNumberHeaders :: MaxNumberHeaders
-noMaxNumberHeaders = - 1
+noMaxNumberHeaders = 0
